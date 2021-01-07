@@ -1,4 +1,4 @@
 plot/*
-plot*
+plot.*
 output.*
 .ipynb_checkpoints
