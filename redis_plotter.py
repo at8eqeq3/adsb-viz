@@ -1,6 +1,8 @@
 import colorsys
 import redis
+import threading
 import time
+import schedule
 from PIL import Image
 
 # redis server
@@ -12,15 +14,16 @@ BBOX_COORDS  = [54.96787, 35.85686, 56.85398, 40.53386]
 XY_COEFF     = 1.76
 SIZE_DEGREES = [(BBOX_COORDS[2] - BBOX_COORDS[0]) * XY_COEFF, BBOX_COORDS[3] - BBOX_COORDS[1]]
 CENTER       = [(BBOX_COORDS[0] + BBOX_COORDS[2]) / 2, (BBOX_COORDS[1] + BBOX_COORDS[3]) / 2]
-
-COEFS        = [1000, 1000, 40000]
-SIZE_PIXELS  = [int(SIZE_DEGREES[1] * 1000), int(SIZE_DEGREES[0] * 1000)]
+COEFS        = [500, 500, 40000]
+SIZE_PIXELS  = [int(SIZE_DEGREES[1] * COEFS[1]), int(SIZE_DEGREES[0] * COEFS[0])]
+BGCOLOR      = (10, 0, 20)
 
 r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0, decode_responses=True)
 
-i = 0
-while(True):
-  im = Image.new('RGB', SIZE_PIXELS, color=(10, 0, 20))
+cntr = 0
+
+def plot():
+  im = Image.new('RGB', SIZE_PIXELS, color=BGCOLOR)
   for key in r.scan_iter():
     try:
       data = key.split(',')
@@ -37,6 +40,15 @@ while(True):
     except IndexError as e:
       pass
   im = im.transpose(Image.FLIP_TOP_BOTTOM)
-  im.save("plot/frame_%06d.png" % i)
-  i += 1
-  time.sleep(1)
+  im.save("plot/frame_%06d.png" % cntr)
+
+def run_threaded(job_func):
+  job_thread = threading.Thread(target=job_func)
+  job_thread.start()
+
+schedule.every(2).seconds.do(run_threaded, plot)
+
+while(True):
+  schedule.run_pending()
+  cntr += 1
+  time.sleep(2)

@@ -20,7 +20,7 @@ Start `redis_feeder.py`. It will grab data from ADS-B receiver and send to redis
 
 `mkdir plot` or whatever you want (don't forget to change the path in `redis_plotter.py`). Set your antenna location (to convert coordinates to pixels) and run `redis_plotter.py`. This will start to fill you destination directory fith frames.
 
-`ffmpeg -y -pattern_type glob -i "plot/*.png" -r 30 output.mp4` when you think there're enough frames. Feel free to change framerate (the `-r <num>` option) or play with output format.
+`ffmpeg -y -r 30 -pattern_type glob -i "plot/*.png" -r 30 output.mp4` when you think there're enough frames. Feel free to change framerate (the `-r <num>` option) or play with output format.
 
 ## D1rty Haxx
 
@@ -31,6 +31,6 @@ Start `redis_feeder.py`. It will grab data from ADS-B receiver and send to redis
 
 - [x] Coeffs for coords-to-pixels convertion are set by wild guess. This, for my setup, results in too wide picture with almost empty left side. Probably will be better to define a desired area in coords, create image based on this and just skip coords that don't fit.
 - [x] This also leads to `redis_plotter.py` failures when coords are out of guessed bounds. Probably solution for previous problem will solve this too.
-- [ ] Time intervals are almost random and mostly depend on how long we receive data from redis. Would be better to use some sort of scheduler -- built into script or even `cron`.
+- [x] Time intervals are almost random and mostly depend on how long we receive data from redis. Would be better to use some sort of scheduler -- built into script or even `cron`.
 - [ ] Maybe draw some POIs, like airports, beacons, radar...
-
+- [ ] Still, I want some 3D...
