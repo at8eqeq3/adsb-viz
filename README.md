@@ -1,4 +1,4 @@
-# ADSB visualization
+# ADS-B visualization
 
 Another attempt to visualize data from ADS-B receiver.
 
@@ -7,7 +7,7 @@ Another attempt to visualize data from ADS-B receiver.
 * some ADS-B receiver software capable to send data in SBS3 format. Tested with [dump1090-fa](https://github.com/flightaware/dump1090)
 * [redis](https://redis.io) server
 * python3 interpreter
-* [redis-py](https://github.com/andymccurdy/redis-py)
+* [redis-py](https://github.com/andymccurdy/redis-py), [schedule](https://github.com/dbader/schedule)
 * [ffmpeg](http://ffmpeg.org) to make videos from frames
 
 ## How to run
